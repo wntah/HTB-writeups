@@ -1,1 +1,2 @@
-# HTB-writeups
+(˶˃ ᵕ ˂˶) HTB Writeups (˶˃ ᵕ ˂˶)  
+halloo im wntr/wiener, this is where i document my hackthebox journey. i started properly writing things up from may 19th, onwards, so everything before that lives in my head only lol. machines completed after that date will have a full writeup here. i'm still learning as i go, so expect rough edges, questionable things, and the occasional "wait wtf that works" moments. i really hope you find something useful in here :3 
