@@ -1,4 +1,4 @@
-# hackthebox: kobold — writeup
+# hackthebox: kobold writeup
 
 **box:** kobold  
 **os:** linux
@@ -11,7 +11,7 @@
 1. **foothold:** unauthenticated rce in mcpjam inspector (cve-2026-23744) via `/api/mcp/connect` → shell as `ben`.
 2. **privesc:** `ben` has implicit docker group access via pam. `newgrp docker` activates it. mount host `/` into a container with `--user 0` and read `/root/root.txt`.
 
-the intended path is short. most of our time was spent down rabbit holes the box deliberately seeds.
+the intended path is short. most of my time was spent down rabbit holes 😠
 
 ---
 
