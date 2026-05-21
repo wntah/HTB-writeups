@@ -1,7 +1,7 @@
 # hackthebox: kobold — writeup
 
 **box:** kobold  
-**os:** linux (ubuntu 24.04.4 lts)  
+**os:** linux
 **difficulty:** easy  
 
 ---
