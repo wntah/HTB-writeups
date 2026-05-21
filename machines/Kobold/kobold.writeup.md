@@ -3,7 +3,6 @@
 **box:** kobold  
 **os:** linux (ubuntu 24.04.4 lts)  
 **difficulty:** easy  
-**ip:** 10.129.1.96
 
 ---
 
@@ -54,7 +53,7 @@ two vhosts:
 
 ---
 
-## foothold — mcpjam inspector rce (cve-2026-23744)
+## foothold - mcpjam inspector rce (cve-2026-23744)
 
 mcpjam inspector exposes an unauthenticated `/api/mcp/connect` endpoint that takes a `command` + `args` and passes them straight to `/bin/sh -c`. the endpoint advertises its required json shape via validation errors:
 
@@ -98,7 +97,7 @@ curl -sk -x post https://mcp.kobold.htb/api/mcp/connect \
 
 lands as `ben@kobold` in `/usr/local/lib/node_modules/@mcpjam/inspector`. note that mcpjam runs as `ben` on the host, not in a container — this is the box's first head-fake.
 
-### gotcha — local firewall
+### gotcha - local firewall
 
 `nc -zv 10.10.14.182 4444` from a second terminal returned `connection refused`. the listener had exited because earlier probing closed it. restart with `nc -lvnp 4444` and verify with a fresh probe before firing the payload. (initially i misread this as a firewall issue.)
 
@@ -122,7 +121,7 @@ user flag at `/home/ben/user.txt`.
 
 ---
 
-## privesc — newgrp docker
+## privesc - newgrp docker
 
 ### the trick
 
@@ -187,13 +186,13 @@ root flag captured.
 
 kobold is designed to send you chasing cves that don't apply. we followed several before circling back.
 
-### 1. cve-2026-23520 — arcane lifecycle-label rce
+### 1. cve-2026-23520 - arcane lifecycle-label rce
 
 old writeups for "kobold" point at this. arcane is at `127.0.0.1:3552` (`*:3552` actually, reachable from attacker tool), and it has a known unauthenticated rce via docker lifecycle labels on the project create endpoint.
 
 we confirmed via `/api/app-version` that arcane is v1.13.0 — the patched version. cve-2026-23520 was fixed in 1.13.0 by removing the lifecycle-label feature entirely. dead.
 
-### 2. cve-2026-23944 — arcane unauth proxy bypass
+### 2. cve-2026-23944 - arcane unauth proxy bypass
 
 same arcane, different bug: `/api/environments/{id}/...` proxies to remote agents *before* authenticating, when `id != local`. should work on 1.13.0, fixed in 1.13.2.
 
@@ -294,10 +293,10 @@ this is arcane's data encryption key. useful only if you can also read arcane's 
 
 ## cves referenced
 
-- **cve-2026-23744** — mcpjam inspector unauth rce (the one that worked)
-- **cve-2026-23520** — arcane lifecycle-label rce (patched)
-- **cve-2026-23944** — arcane unauth proxy bypass (needs remote env)
-- **cve-2026-40242** — arcane unauth ssrf (no useful target)
+- **cve-2026-23744** - mcpjam inspector unauth rce (the one that worked)
+- **cve-2026-23520** - arcane lifecycle-label rce (patched)
+- **cve-2026-23944** - arcane unauth proxy bypass (needs remote env)
+- **cve-2026-40242** - arcane unauth ssrf (no useful target)
 
 ## flags
 
