@@ -1,7 +1,5 @@
 # hackthebox: kobold writeup
 
-**box:** kobold  
-
 **os:** linux
 
 **difficulty:** easy  
