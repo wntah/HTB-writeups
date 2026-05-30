@@ -1,6 +1,6 @@
 # smarthire
 
-**platform:** linux 
+**os:** linux 
 
 **rating:** medium
 
