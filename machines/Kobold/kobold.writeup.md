@@ -2,7 +2,7 @@
 
 **os:** linux
 
-**difficulty:** easy  
+**rating:** easy  
 
 ---
 
