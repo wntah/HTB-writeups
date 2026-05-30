@@ -162,7 +162,7 @@ docker ps
 
 docker daemon runs as root, so anyone who can talk to the socket can mount host `/` into a container and read everything. standard escape.
 
-two pitfalls we hit:
+two pitfalls i hit:
 
 1. `docker run alpine ...` fails because the box has no outbound to `registry-1.docker.io`. use the **image that's already on disk**: `privatebin/nginx-fpm-alpine:2.0.2`.
 2. the privatebin image's entrypoint launches s6/php-fpm and ignores `cmd` overrides. use `--entrypoint`.
@@ -186,13 +186,13 @@ root flag captured.
 
 ## rabbit holes (the long way around)
 
-kobold is designed to send you chasing cves that don't apply. we followed several before circling back.
+kobold is designed to send you chasing cves that don't apply. I followed several before circling back.
 
 ### 1. cve-2026-23520 - arcane lifecycle-label rce
 
 old writeups for "kobold" point at this. arcane is at `127.0.0.1:3552` (`*:3552` actually, reachable from attacker tool), and it has a known unauthenticated rce via docker lifecycle labels on the project create endpoint.
 
-we confirmed via `/api/app-version` that arcane is v1.13.0 — the patched version. cve-2026-23520 was fixed in 1.13.0 by removing the lifecycle-label feature entirely. dead.
+confirmed via `/api/app-version` that arcane is v1.13.0 — the patched version. cve-2026-23520 was fixed in 1.13.0 by removing the lifecycle-label feature entirely. dead.
 
 ### 2. cve-2026-23944 - arcane unauth proxy bypass
 
@@ -222,7 +222,7 @@ curl -s "http://127.0.0.1:3552/api/templates/fetch?url=http://127.0.0.1:3552/api
 # returns the full /api/version json inside a "data" wrapper
 ```
 
-what we tried:
+what I tried:
 
 - `file:///root/root.txt` → "unsupported protocol scheme" (blocked)
 - `http://127.0.0.1:2375/`, `:2376/` → docker is unix-socket only
@@ -248,7 +248,7 @@ ben is in group `operator` (gid 37), and `find / -group operator -writable` show
 /privatebin-data/data/bd/b5
 ```
 
-this looks exploitable. privatebin stores pastes as `.php` files in `bd/<two>/<rest>.php`. we can write into `bd/b5/` and the top-level data dir. the hope: drop php, get included.
+this looks exploitable. privatebin stores pastes as `.php` files in `bd/<two>/<rest>.php`. can write into `bd/b5/` and the top-level data dir. the hope: drop php, get included.
 
 but:
 
@@ -260,11 +260,11 @@ it looked like a privesc surface and turned out to be theater.
 
 ### 5. alice
 
-`/etc/group` shows `operator:x:37:ben,alice` and `/home/alice` exists but is mode 750 to alice:alice. we never found a credential or pivot. alice was apparently a red herring too (or a setup for a different escalation path we didn't need).
+`/etc/group` shows `operator:x:37:ben,alice` and `/home/alice` exists but is mode 750 to alice:alice. i never found a credential or pivot. alice was apparently a red herring too (or a setup for a different escalation path i didn't need).
 
 ### 6. brute-forcing arcane creds
 
-`/api/auth/login` is unauthenticated. we tried `admin:admin`, `admin:kobold`, `alice:alice`, and the obvious neighbors. none worked. (not the path anyway.)
+`/api/auth/login` is unauthenticated. i tried `admin:admin`, `admin:kobold`, `alice:alice`, and the obvious neighbors. none worked. (not the path anyway.)
 
 ### 7. the encryption key in the systemd unit
 
